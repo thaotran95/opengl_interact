@@ -11,20 +11,27 @@ void on_surface_created() {
 void on_surface_changed() {
 }
 
-char* on_draw_frame(unsigned int VBO, unsigned int vao, float * vertices_cpp_pointer) {
-    unsigned int index[] = {
-            0, 1, 2,
-    };
-    float vertices_cpp[9];
-    for(int i=0;i<9;i++){
+char* on_draw_frame(float * vertices_cpp_pointer, long vertices_array_size) {
+    unsigned int VBO, vao;
+    unsigned int index[vertices_array_size/3];
+    float vertices_cpp[vertices_array_size];
+    for(int i=0;i<vertices_array_size/3;i++){
+        index[i]=i;
+    }
+    for(int i=0;i<vertices_array_size;i++){
         vertices_cpp[i]=vertices_cpp_pointer[i];
     }
+
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices_cpp), vertices_cpp, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    GLuint ibo;
+    glGenBuffers(1, &ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(index), index, GL_STATIC_DRAW);
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
     int success;
     char * infoLog = (char*)malloc(512);
     strcpy(infoLog, "OK");
@@ -74,15 +81,14 @@ char* on_draw_frame(unsigned int VBO, unsigned int vao, float * vertices_cpp_poi
     glBindVertexArray(vao);
     glVertexAttribPointer(
             0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-            3,                  // size
+            3,                  // number of components per generic vertex attribute (eg: (x,y,z)=3)
             GL_FLOAT,           // type
             GL_FALSE,           // normalized?
             0,                  // stride
             (void*)0            // array buffer offset
     );
-    glDrawElements(GL_TRIANGLES,3,GL_UNSIGNED_INT,index);
+    glDrawElements(GL_TRIANGLES,vertices_array_size/3,GL_UNSIGNED_INT,index);
     glDisableVertexAttribArray(0);
-
     //sleep(1);
     return infoLog;
 }

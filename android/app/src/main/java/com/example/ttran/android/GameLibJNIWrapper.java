@@ -9,5 +9,5 @@ public class GameLibJNIWrapper {
 
     public static native void on_surface_changed(int width, int height);
 
-    public static native String on_draw_frame(long VBO, long vao, float [] vertices);
+    public static native String on_draw_frame( float [] vertices, long vertices_array_size);
 }

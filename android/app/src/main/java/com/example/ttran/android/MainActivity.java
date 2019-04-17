@@ -6,6 +6,7 @@ import static android.opengl.GLES30.*;
 import android.opengl.GLSurfaceView;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.view.WindowManager;
 import android.widget.Toast;
 import android .content.pm.ConfigurationInfo;
 import android.os.Build;
@@ -27,9 +28,11 @@ public class MainActivity extends AppCompatActivity {
         final boolean supportsEs2 =
                 configurationInfo.reqGlEsVersion >= 0x20000 || isProbablyEmulator();
 
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         if (supportsEs2) {
             glSurfaceView = new SurfaceViewWrapper(this);
-
             if (isProbablyEmulator()) {
                 // Avoids crashes on startup with some emulator images.
                 glSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
@@ -43,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
                     Toast.LENGTH_LONG).show();
             return;
         }
-
     }
 
     private boolean isProbablyEmulator() {
@@ -58,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
         if (rendererSet) {
             glSurfaceView.onPause();
         }
@@ -72,9 +73,4 @@ public class MainActivity extends AppCompatActivity {
             glSurfaceView.onResume();
         }
     }
-
-    /**
-     * A native method that is implemented by the 'native-lib' native library,
-     * which is packaged with this application.
-     */
 }

@@ -9,4 +9,4 @@
 
 void on_surface_created();
 void on_surface_changed();
-char * on_draw_frame(unsigned int VBO, unsigned int vao, float* vertices_cpp);
+char * on_draw_frame(float* vertices_cpp, long vertices_array_size);

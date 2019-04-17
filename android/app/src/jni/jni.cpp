@@ -36,10 +36,10 @@ JNIEXPORT void JNICALL Java_com_example_ttran_android_GameLibJNIWrapper_on_1surf
  * Signature: ()V
  */
 JNIEXPORT jstring JNICALL Java_com_example_ttran_android_GameLibJNIWrapper_on_1draw_1frame
-        (JNIEnv *env, jclass,jlong VBO, jlong vao, jfloatArray vertices){
+        (JNIEnv *env, jclass, jfloatArray vertices, jlong vertices_array_size){
     char * infoLog;
     jfloat * vertices_cpp= env->GetFloatArrayElements(vertices,0);
-    infoLog = on_draw_frame(VBO, vao,vertices_cpp);
+    infoLog = on_draw_frame(vertices_cpp,vertices_array_size);
     jstring infoLog_jstring = env->NewStringUTF(infoLog);
     return infoLog_jstring;
 
